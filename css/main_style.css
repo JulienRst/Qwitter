@@ -1,0 +1,919 @@
+/* ///////////// FONTS //////////////// */
+
+@font-face {
+	font-family: 'nexa-bold';
+	src: url(../datas/fonts/nexa_bold-webfont.ttf);
+}
+
+@font-face {
+	font-family: 'nexa-light';
+	src: url(../datas/fonts/nexa_light-webfont.ttf);
+}
+
+@font-face {
+	font-family: 'roboto-medium';
+	src: url(../datas/fonts/roboto-medium-webfont.ttf);
+}
+
+@font-face {
+	font-family: 'roboto-light';
+	src: url(../datas/fonts/roboto-light-webfont.ttf);
+}
+
+
+
+/* ///////////// RESET //////////////// */
+
+p,h2 {
+	margin: 0;
+	padding: 0;
+}
+
+a {
+	color: black;
+	text-decoration: none;
+}
+
+/* ///////////// MAIN ///////////////// */
+
+html, body {
+	width :100%;
+	margin: 0;
+	padding: 0;
+}
+
+html {
+	height: 100%;
+}
+
+body {
+	background-image: url(../datas/img/swirl_pattern.png);
+	height: 100%;
+}
+
+.ctn-v-center {
+	display: table;
+	width: 100%;
+	height: 100%;
+}
+
+section.h-v-center {
+	margin: auto;
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.content {
+	background-color: white;
+	width: 960px;
+	height: 490px;
+	display: block;
+	margin: auto;
+	position: relative;
+}
+
+article {
+	line-height: 490px;
+	font-size: 0;
+}
+
+#ctn_ci_logo {
+	height: 490px;
+	width: 400px;
+	background-color: rgb(32,31,32);
+	display: inline-block;
+	vertical-align: top;
+}
+
+#ctn_ci_logo img {
+	line-height: 490px;
+	display: inline-block;
+	vertical-align: middle;
+	width: 300px;
+}
+
+.ctn_form {
+	width: 560px;
+	height: 490px;
+	display: inline-block;
+	vertical-align: top;
+	font-size: 15pt;
+	line-height: 18pt;
+	padding: 35px;
+	box-sizing:border-box;
+	text-align: left;
+	position: relative;
+}
+
+h2 {
+	font-family: 'nexa-light';
+	font-weight: normal;
+}
+
+p {
+	font-family: 'nexa-light';
+	font-size: 13pt;
+}
+
+input {
+	display: block;
+	width: 300px;
+	height: calc(14pt + 7px);
+	line-height: calc(14pt + 7px);
+	padding: 7px;
+	font-family: 'roboto-light';
+	font-weight: lighter;
+	color: rgb(62,61,66);
+	font-size: 14pt;
+	border: 1.5px solid black;
+}
+
+button[type="submit"]{
+	width: 150px;
+	padding: 0;
+	line-height: 25pt;
+	height: 30pt;
+	font-size: 15pt;
+	font-weight: normal;
+	background-color: rgb(233,86,58);
+	border: none;
+	color: white;
+	font-family: 'roboto-medium';
+	cursor: pointer;
+}
+
+div#ctn_addition p, div#ctn_addition input{
+	display: inline-block;
+}
+
+div#ctn_addition input {
+	width: 80px;
+}
+
+#error_message {
+	position: fixed;
+	vertical-align: middle;
+	text-align: center;
+	margin: auto;
+	width: 500px;
+	min-height: 50px;
+	max-height: 100px;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+}
+
+#error_message a {
+	color: black!important;
+}
+
+p#register {
+	position: absolute;
+	bottom: 15px;
+}
+
+p#register a {
+	font-family: 'roboto-medium';
+	color: rgb(15,14,15);
+	transition:0.2s;
+}
+
+p#register a:hover{
+	color: rgb(233,86,58);
+}
+
+/* //////////////// INDEX PAGE | NAV ////////////////// */
+
+div#wrap {
+	width: 960px;
+	min-height: 100%;
+	display: block;
+	margin: auto;
+	background-color: #252525;
+}
+
+nav {
+	background-color: rgb(233,86,58);
+	width: 960px;
+	height: 3em;
+	line-height: 3em;
+	display: inline-block;
+	position: fixed;
+}
+
+nav img {
+	vertical-align: middle;
+	height: 2em;
+	width: 2em;
+	margin-left: 10px;
+	margin-bottom: 0.35em; /* A MODIFIER */	
+}
+
+nav div.nav-ctn-pic{
+	line-height: 3em;
+	display: inline-block;
+	margin-left: 5px;
+}
+
+nav #nav-pic {
+	display: inline-block;
+	background-color: black;
+	border-radius: 5px;
+	overflow: hidden;
+	cursor: pointer;
+	vertical-align: middle;
+	height: 2em;
+	width: 2em;
+	margin-left: 10px;
+	margin-bottom: 0.35em;
+	background-position: center;
+	background-size: 100% auto;
+}
+
+div#ntf {
+	display: inline-block;
+	color: white;
+	height: 3em;
+}
+
+div#ntf *{
+	display: inline-block;
+	font-family: "roboto-medium";
+}
+
+div#ntf-ctn {
+	background-color: white;
+	border-radius: 5px;
+	width: 1.5em;
+	height: 1.5em;
+	color :rgb(233,86,58);
+	line-height: 1.5em;
+	text-align: center;
+}
+
+input#user-finder {
+	width: 200px;
+	height: 1.5em;
+	display: inline-block;
+	background-color: white;
+	border:none;
+	padding: 0;
+	margin: 0;
+	margin-left: 645px;
+
+	/* - bg - */
+	background-image: url(../datas/img/lense.png);
+	background-repeat: no-repeat;
+	background-position: calc(200px - 1.25em) 0.25em;
+	background-size: 1em;
+	font-size: 1em;	
+}
+
+input#user-finder:focus{
+	outline: none;
+}
+
+div#list-user-finder {
+	position: absolute;
+	background-color: white;
+	left: 700px;
+	width: 200px;
+}
+
+div.item-user-finder {
+	background-color: white;
+	transition:0.2s;
+	cursor: pointer;
+}
+div.item-user-finder:hover {
+	background-color: #ACACAC;
+	transition:0.2s;
+}
+
+div#list-user-finder .item-user-pic,div#list-user-finder .item-user-info {
+	display: inline-block;
+	vertical-align: middle;
+	margin: 3px;
+}
+
+div#list-user-finder .item-user-info p{
+	line-height: 1em;
+}
+
+div#list-user-finder .item-user-name {
+	font-family: 'roboto-medium';
+	font-size: 1em;
+} 
+
+div#list-user-finder .item-user-pseudo {
+	font-family: 'roboto-light';
+	font-size: 0.8em;
+}
+
+img#gear {
+	transition:0.5s;
+	cursor: pointer;
+	transform : rotate(0deg);
+	right: 0;
+}
+
+img#gear:hover{ 
+	transform : rotate(180deg);
+}
+
+	/* - parameters - */
+
+div#ctn-parameters {
+	position: relative;
+}
+
+div#parameters {
+	display: none;
+	position: absolute;
+	background-color: #DEDEDE;
+	left: 830px;
+	top: 60px;
+	width: 140px;
+	height: 4.1em;
+}
+
+div#parameters:before {
+content: '';
+display: block;
+position: absolute;
+top: -20px;
+left: 95px;
+width: 0;
+height: 0;
+border-color: transparent transparent #DEDEDE transparent;
+border-style: solid;
+border-width: 10px;
+}
+
+div.param {
+	padding: 0.5em;
+	font-size: 0.9em;
+	line-height: 1em;
+}
+
+div.param * {
+	margin: 0;
+	vertical-align: middle;
+	cursor: pointer;
+}
+
+div.param img {
+	height: 1.2em;
+	width: 1.2em;
+}
+div.param p {
+	margin: 0;
+	padding: 0;
+	display: inline-block;
+}
+
+
+/* //////////////// INDEX PAGE | HEADER ////////////////// */
+
+header {
+	font-size: 0;
+	width: 100%;
+	height: 300px;
+	padding-top: 3rem;
+}
+
+header * {
+	display: inline-block;
+	vertical-align: top;
+}
+
+/* ---- PARTIE GAUCHE : PROFIL PIC; ---- */
+
+#ctn-profil-pic {
+	background-color: rgba(0,0,0,0.90);
+	height: 100%;
+	width: 300px;
+}
+
+.profil-pic {
+	width: 200px;
+	height: 200px;
+	border-radius: 100px;
+	background-color: black;
+	border: solid 3px white;
+	overflow: hidden;
+	display: block;
+	margin:auto;
+	margin-top: 50px;
+	background-position: center;
+	background-size: 100% auto;
+}
+
+/* ---- PARTIE DROITE : SUB INFO; ---- */
+
+
+#sub-view-info *{
+	display: block;
+}
+
+#view-info {
+	background-image: url(../datas/img/fancy-pants-blur.jpg);
+	background-repeat: repeat;
+	background-size: 75%; 
+	width: calc(100% - 300px);
+	height: 100%;
+}
+#sub-view-info {
+	width: 100%;
+	height: 100%;
+	font-size: 2rem;
+	color: white;
+	text-align: center;
+	padding: 3rem;
+	box-sizing:border-box;
+}
+
+.sub-view-info p {
+	font-family: "roboto-medium";
+	font-size: 0.75em;
+}
+
+#sub-view-pseudo p {
+	font-size: 0.50em;
+}
+
+#ctn-number {
+	margin-top: 25px;
+}
+
+#ctn-number *{
+	display:inline-block;
+	line-height: 2em;
+	vertical-align: middle;
+	font-family: "roboto-light";
+}
+
+span {
+	display: inline!important;
+}
+
+
+#social-button{
+	background-color: rgb(233,86,58);
+	border:none;
+	font-size: 20px!important;
+	color:white;
+	margin:auto;
+	margin-top: 25px;
+	padding:10px;
+	border-radius:5px;
+	cursor: pointer;
+}
+img.valid{
+	width:20px;
+	margin-right:10px;
+
+}
+
+#social-button * {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+
+/* //////////////// INDEX PAGE | SECTION ////////////////// */
+
+
+section#ctn-qwitts{
+	width:100%;
+	padding: 1rem;
+}
+
+section#ctn-qwitts p {
+	font-family: "roboto-medium";
+}
+
+div#post-qwitt {
+	display: block;
+	background-color:rgba(0,0,0,0.9);
+	width: 800px;
+	margin:auto;
+	padding: 5px;
+	box-sizing:border-box;
+	text-align: center;
+	transition:0.2s;
+}
+
+div#qwitt-launcher {
+	display: block;
+	width: 800px;
+	height: 0;
+	margin: auto;
+	overflow: hidden;
+}
+
+div#post-qwitt textarea {
+	resize : none;
+	width: calc(100% - 10px);
+	min-height: 75px;
+	outline: none;
+	font-family: "roboto-light";
+	transition:0.2s;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+div#post-qwitt textarea:focus {
+	min-height: 150px;
+}
+
+div#post-qwitt p{
+	color: white;
+	text-align: right;
+	cursor: pointer;
+	transition:0.2s;
+}
+
+div#post-qwitt p:hover {
+	color:rgb(233,86,58);
+}
+
+/* ----- || QWITT || ----- */
+
+div.qwitt{
+	width: 800px; 
+	display: block;
+	margin: auto;
+	margin-top: 25px;
+	background-color: white;
+}
+
+.q-header-pic,.q-header-view,.q-header-icon{
+	display: inline-block;
+	vertical-align: top;
+	box-sizing:border-box;
+}
+
+/* --- //HEADER// --- */
+
+.qwitt-header{
+	background-color: #DEDEDE;
+	color:black;
+	font-size: 0;
+}
+
+.qwitt-header p,.qwitt-footer p {
+	color :black;
+}
+
+/* ** 1 ** */
+
+.q-header-pic {
+	width: 4rem;
+	height: 4rem;
+	padding: 0.5rem;
+}
+
+.q-header-pic div {
+	width: 100%;
+	height: 100%;
+	background-color: white;
+	border-radius: 0.3rem;
+	background-position: center;
+	background-size: 100% auto;
+}
+
+/* ** 2 ** */
+
+.q-header-view {
+	width: calc(100% - 8rem);
+	margin-top: 6px;
+}
+
+.q-header-view *{
+	display: block;
+}
+
+.q-header-view-name{
+	font-size:1rem;
+}
+
+.q-header-view-date{
+	font-size:0.7rem;
+}
+.q-header-view-modify{
+	font-size: 0.6rem;
+	color: white;
+	transition:0.2s;
+	cursor: pointer;
+}
+.q-header-view-modify:hover {
+	color: rgb(233,86,58);
+}
+
+
+/* ** 3 ** */
+
+.q-header-icon {
+	width: 4rem;
+	text-align: right;
+}
+
+.q-header-icon div {
+	height: 1.5rem;
+	width: 1.5rem;
+	vertical-align: middle;
+	margin: 0.2rem;
+	background-repeat: no-repeat; 
+	background-size: auto 100%;
+	background-position: center;
+	transition:0.3s;
+	cursor: pointer;
+	display: inline-block;
+}
+
+.q-header-icon .icon-reqwitt {
+	background-image: url(../datas/img/retweet_nb.png);
+}
+
+.q-header-icon .icon-reqwitt:hover {
+	background-image: url(../datas/img/retweet.png);
+}
+
+.q-header-icon .icon-fav {
+	background-image: url(../datas/img/favoris_nb.png);
+}
+
+.q-header-icon .icon-fav:hover {
+	background-image: url(../datas/img/favoris.png);
+}
+
+
+
+/* --- //MESSAGE// --- */
+
+.qwitt-message {
+	box-sizing:border-box;
+	padding: 0.5rem;
+}
+
+/* --- //FOOTER// --- */
+
+.qwitt-footer {
+	background-color: #DEDEDE;
+	padding: 0.2rem;
+}
+
+.qwitt-footer * {
+	display: inline-block;
+	color: white;
+	font-size: 0.8rem;
+	vertical-align: middle;
+	line-height: 1rem;
+}
+
+.qwitt-footer p {
+	font-family: "roboto-light"!important;
+}
+
+/* ----- || RETWEET || ----- */
+
+.sprt {
+	height: 1px;
+	width: 75%;
+	box-sizing:border-box;
+	margin: auto;
+	background-color: black;
+}
+
+.rq-header-pic,.rq-header-view {
+	display: inline-block;
+	vertical-align: top;
+}
+
+.rq-header-pic {
+	width: 2.5rem;
+	height: 2.5rem;
+	padding: 0.5rem;
+}
+
+.rq-header-pic div {
+	width: 100%;
+	height: 100%;
+	background-color: white;
+	border-radius: 5px;
+	background-position: center;
+	background-size: 100% auto;
+}
+
+.rq-header-view {
+	padding-top: 0.5rem; 
+}
+
+.rq-header-view-name {
+	font-size: 0.8rem;
+}
+
+.rq-header-view-date {
+	font-size: 0.6rem;
+}
+
+.rq-message {
+	padding: 0.5rem;
+}
+
+/* ----- || FAVORIS || ----- */
+
+.fav-message p{
+	font-size: 0.8rem;
+	padding: 0.5rem;
+}
+
+/* /////////////////////// PARAMETRE //////////////////////// */
+
+.ctn-popup {
+	position: fixed;
+	top: 0;
+	width: 100%;
+	height: 100%;
+	display: none;
+}
+
+.parameter-popup {
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0,0,0,0.8);
+	display: table;
+}
+
+.parameter-popup .ctn-profil-pic,.parameter-popup .modify{
+	display: inline-block;
+	vertical-align: middle;
+}
+
+.parameter-popup .content {
+	width: 700px;
+	height: 400px;
+	line-height: 400px;
+}
+
+.parameter-popup .ctn-profil-pic {
+	margin : 0;
+	cursor: pointer;
+}
+
+.ctn-profil-pic {
+	position: relative;
+	width: 200px;
+	height: 200px;
+	overflow: hidden;
+}
+
+.ctn-profil-pic .profil-pic {
+	top: 0;
+	height: 0;
+	width: 200px;
+	height: 200px;
+	margin-top: 0;
+	box-sizing:border-box;
+}
+
+.ctn-profil-pic .hover-profil-pic{
+	background-color: rgba(0,0,0,0.8);
+	top: 3px;
+	left: 3px;
+	width: 194px;
+	height: 194px;
+	border-radius:100px;
+	display: none;
+}
+
+#input_file {
+	display: none;
+}
+
+.hover-profil-photo {
+	width: 114px;
+	height: 85px;
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin:auto;
+}
+
+.ctn-profil-pic .profil-pic,.ctn-profil-pic .hover-profil-pic {
+	position: absolute;
+}
+
+div.modify{
+	display:inline-block;
+	margin-left: 50px;
+}
+
+div.modify * {
+	line-height: 23px;
+}
+
+div.title{
+	background-color: rgb(233,86,58);
+	color:white;
+	font-family: "roboto-light";
+	font-size: 20px;
+	margin-bottom: 20px;
+	padding:5px 30px;
+	line-height: 23px;
+}
+
+button{
+	display:inline-block;
+	line-height: 23px;
+}
+
+button#annuler{
+	background-color: white;
+	border:solid 1px #DEDEDE;
+	color:#505050;
+}
+
+/* /////////////////////// REQWITT //////////////////// */
+
+.ctn-reqwitt {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	display: none;
+}
+
+.ctn-reqwitt .content {
+	width: 900px;
+	height: 500px;
+	display: block;
+	padding: 5px;
+	position: relative;
+}
+
+.post-qwitt {
+	display: inline-block;
+	background-color:rgba(0,0,0,0.9);
+	width: 350px;
+	padding: 5px;
+	box-sizing:border-box;
+	text-align: center;
+	line-height: normal;
+	transition:0.2s;
+	margin:10px;
+	vertical-align: middle;
+}
+
+.post-qwitt textarea {
+	resize : none;
+	width: calc(100% - 10px);
+	min-height: 75px;
+	outline: none;
+	font-family: "roboto-light";
+	transition:0.2s;
+	display: inline-block;
+	vertical-align: middle;
+	line-height: normal;
+}
+
+.post-qwitt textarea:focus {
+	min-height: 150px;
+}
+
+.post-qwitt p{
+	color: white;
+	text-align: right;
+	cursor: pointer;
+	transition:0.2s;
+}
+
+.qwitt-to-reqwitt {
+	display: inline-block;
+	vertical-align: middle;
+	width: 350px;
+	padding: 5px;
+	line-height: normal;
+	text-align: left;
+}
+
+.qwitt-to-reqwitt .qwitt {
+	width: 350px;
+}
+
+.rq-ctn-btn {
+	line-height: normal;
+}
+
+.reqwitt-title {
+	font-size: 2rem;
+	line-height: 2rem;
+	color: white;
+	background-color: rgb(233,86,58);
+}
