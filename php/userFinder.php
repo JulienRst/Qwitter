@@ -1,6 +1,6 @@
 <?php
 
-	require('library/lib.php');
+	require('library/database.php');
 	$db = new database();
 
 	if($_GET['research'] != ""){

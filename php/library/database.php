@@ -1,15 +1,33 @@
 <?php
-	//Pour A : Les bindParam remplace les :item par la valeur du deuxième paramètre
 
 	require_once('ircmaxell/ircmaxell.php'); //crypter - décrypter les mots de passes
 
+	/* 
+
+		L'objet database contient toutes les fonctions qui permettent d'obtenir des 
+		informations dans la bdd, d'en ajouter, d'en enlever.
+
+	*/
+
 	class database{
+
+		//dbname / host / login_bdd / mdp_bdd permettent sont les informations nécessaires pour se connecter à la BDD.
 
 		private $dbname = "qwitter";
 		private $host = "localhost";
 		private $login_bdd = "root";
 		private $mdp_bdd = "";
-		protected $pdo; // Pont entre la BDD et le code php
+
+		// La variable $pdo va nous permettrent de stocker le pont entre le php et la BDD
+		protected $pdo;
+
+		/* ---
+
+			Entrée : #
+			Sortie : #
+			Action : Va mettre dans la variable $pdo l'objet PDO en utilisant les informations de connexion.
+
+		--- */
 
 		private function connectBdd(){
 			$this->pdo = new PDO("mysql:host=".$this->host.";dbname=".$this->dbname,$this->login_bdd,$this->mdp_bdd) or die (
@@ -17,26 +35,46 @@
 			);
 		}
 
-		// Se lance a la construction de l'objet
+		/* ---
+		
+			Entrée : #
+			Sortie : #
+			Action : Lance la fonction connectBdd() et attribue à l'objet PDO des flags d'erreur pour faciliter le débuggage.
+
+		--- */
+
+		
 		public function __construct(){
 			$this->connectBdd();
 			$this->pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 		}
 
+		/* ---
+		
+			Entrée : #
+			Sortie : #
+			Action : #
+
+		--- */
+
 		private function report_error(){
 			//
 		}
 
-		public function isThisMailInDb($u_mail){
-			$stmt = $this->pdo->prepare("SELECT mail FROM user WHERE mail = ?");
-			$stmt->execute(array($u_mail));
+		/* ////////////////// INSCRITPION | CONNEXION ///////////////////// */
 
-			if($stmt->rowcount() != 0){
-				return true;
-			} else {
-				return false;
-			}
-		}
+		/* ---
+		
+			Entrée : Les informations sur l'utilisateur à enregistrer
+				-key est un identifiant unique qui associé au mail permettra plus tard de vérifier l'adresse mail d'un
+				utilisateur par mail.
+			Sortie : #
+			Action : Insertion dans la BDD de l'utilisateur à l'aide de ses infos. On va crypter le mot de passe avant de 
+			le rentrer afin d'éviter qu'il y est des informations en clair dans la base.
+			Si l'insertion se passe mal, on affiche le message d'erreur.
+
+		--- */
+
 
 		public function insertNewUser($name,$surname,$pseudo,$birthday,$mail,$password,$key){
 			$password = cryptmdp($password); //On crypte le mot de passe
@@ -57,6 +95,18 @@
 				exit("Error line ".$e->getLine()." : ".$e->getMessage());
 			} 
 		}
+
+		/* ---
+		
+			Entrée : combinaison mail / mot de passe en clair
+			Sortie : tableau d'information contenant si l'utilisateur est connecté ou non, l'id de l'utilisateur connecté | un message d'erreur 
+			expliquant pourquoi la connexion à échouée
+			Action : On récupère les infos de l'utlisateur à l'aide son adresse mail
+			On test le mot de passe pour savoir s'il est bien à l'origine du mot de passe crypté en bdd.
+			Si c'est bon on retourne [VRAI,id de l'utlisateur connecté]
+			Sinon [FAUX,Message d'erreur]
+
+		--- */
 
 		public function testConnection($mail,$mdp){
 			if($this->isThisMailInDb($mail)){
@@ -81,6 +131,35 @@
 			}
 		}
 
+		/* ---
+		
+			Entrée : Une adresse mail
+			Sortie : VRAI | FAUX
+			Action : On cherche dans la bdd si l'adresse mail est dans la bdd, si elle y est on renvoie VRAI, sinon FAUX
+
+		--- */
+
+		public function isThisMailInDb($u_mail){
+			$stmt = $this->pdo->prepare("SELECT mail FROM user WHERE mail = ?");
+			$stmt->execute(array($u_mail));
+
+			if($stmt->rowcount() != 0){
+				return true;
+			} else {
+				return false;
+			}
+		}
+
+		/* /////////////////////// GET USER /////////////////////////////// */
+
+		/* ---
+		
+			Entrée : mail d'un utilisateur
+			Sortie : id de l'utilisateur
+			Action : Si le mail existe dans la base, on renvoie son id. Sinon on renvoie "Adresse Introuvable"
+
+		--- */
+
 		public function getIdFromMail($mail){
 			if($this->isThisMailInDb($mail)){
 				$stmt = $this->pdo->prepare("SELECT id FROM user WHERE mail = :mail");
@@ -90,6 +169,18 @@
 				return "Adresse introuvable";
 			}
 		}
+
+		/* ---
+		
+			Entrée : id d'un utilisateur
+			Sortie : tableau d'information de l'utilisateur
+			Action : On vérifie que l'id est bien un nombre
+			On récupère les données de l'utilisateur dans la bdd,
+			On transforme son age à l'aide d'une fonction getAge (expliquée plus bas dans ce fichier)
+			On ajoute à ce tableau : nombre de Qwitt | Reqwitt | Favoris (qui sont des informations présentent sur le profil d'une personne)
+			Ainsi que son nombre d'abonnés | abonnement 
+
+		--- */
 
 		public function getCurrentUser($id){
 			if(is_int(intval($id))){
@@ -114,6 +205,17 @@
 			}
 		}
 
+		/* ---
+		
+			Entrée : une chaine de caractère
+			Sortie : la liste des utilisateurs possédant cette chaine de caractères dans son nom | prénom | pseudo
+			Action : On recherche dans la base de données les utilisateurs correspondant à la chaine de caractères. 
+			On recherche sur trois points : name | surname | pseudo
+			Une fois le tableau de résultat obtenu de la requête, on met une majuscule à la première lettre du nom et du prénom 
+			de chaque utilisateur renvoyé car ils sont stockés en minuscule dans la BDD
+
+		--- */
+
 		public function getUserByName($name){
 			$name = '%'.$name.'%';
 			$stmt = $this->pdo->prepare("SELECT id,name,surname,pseudo,url_pic FROM user WHERE name LIKE :name1 or surname LIKE :name2 or pseudo LIKE :name3");
@@ -128,7 +230,18 @@
 			}
 			return $result;
 		}
-		// faire les comptes
+		
+		/* /////////////////////// GET INFO ON USER | MESSAGE /////////////////////////////// */
+
+		/* ---
+		
+			Entrée : Infos à récupérer / Id sur lequel récupérer les infos
+			Sortie : Le nombre de Qwitt/Reqwitt/Favoris/Abonnement/Abonnés
+			Action : On vérifie que le $type rentré est un de ceux que l'on attend
+			Puis on cherche dans la bdd le nombre de résultat et on renvoie le résultat. 
+
+		--- */
+
 		public function getNumberOf($type,$id){
 			if($type == "qwitt" || $type == "reqwitt" || $type == "favoris"){
 				$stmt = $this->pdo->prepare("SELECT count(*) FROM $type WHERE idUser = :idUser");//Dans la table du "type donnée" on va compter toutes les occurences de l'id donné en paramètre
@@ -155,17 +268,19 @@
 			}
 		}
 
-		public function addMessage($idUser,$date,$message){
-			$stmt = $this->pdo->prepare("INSERT INTO qwitt (idUser,date,message) VALUES (:idUser,:date,:message)");
-			$stmt->bindParam(':idUser',$idUser);
-			$stmt->bindParam(':date',$date);
-			$stmt->bindParam(':message',$message);
-			try {
-				$stmt->execute();
-			} catch (Exception $e) {
-				return ("Error line ".$e->getLine()." : ".$e->getMessage());
-			}
-		}
+		/* /////////////////////// GET MESSAGE /////////////////////////////// */
+
+		/* ---
+		
+			Entrée : id d'un utilisateur
+			Sortie : tableau contenant les qwitts d'un utilisateur
+			Action : On va chercher dans la table qwitt tous les qwitt postés par l'utilisateur 
+			Puis on crée un objet qwitt pour chaque message (voir la description de l'objet qwitt plus bas)
+			Et on retourne le tableau contenant les objets qwitt (plus "simplement" exploitable qu'un tableau de tableau pour l'affichage)
+
+			/!\ Même fonctionnement : getMessageFromUser | getFavorisFromUser | getReqwittFromUser /!\
+
+		--- */
 
 		public function getMessageFromUser($id){
 			$stmt = $this->pdo->prepare("SELECT * FROM qwitt WHERE idUser = :id ORDER BY date DESC");
@@ -180,19 +295,6 @@
 				$tab_message[$i] = new qwitt($tab_message[$i],$this->pdo);
 			}
 			return $tab_message;
-		}
-
-		public function getMessageFromId($id){
-			$stmt = $this->pdo->prepare("SELECT * FROM qwitt WHERE id = :id ORDER BY date DESC");
-			$stmt->bindParam(':id',$id);
-			try {
-				$stmt->execute();
-			} catch (Exception $e) {
-				return ("Error line ".$e->getLine()." : ".$e->getMessage());
-			}
-			
-			$message = $stmt->fetchAll(PDO::FETCH_ASSOC);
-			return $message[0];
 		}
 
 		public function getFavorisFromUser($id){
@@ -225,6 +327,51 @@
 			return $tab_message;
 		}
 
+		/* ---
+		
+			Entrée : id d'un qwitt
+			Sortie : tableau d'information du qwitt
+			Action : On récupère un qwitt à l'aide de son identifiant en bdd et on retourne le résultat
+
+		--- */
+
+		public function getMessageFromId($id){
+			$stmt = $this->pdo->prepare("SELECT * FROM qwitt WHERE id = :id ORDER BY date DESC");
+			$stmt->bindParam(':id',$id);
+			try {
+				$stmt->execute();
+			} catch (Exception $e) {
+				return ("Error line ".$e->getLine()." : ".$e->getMessage());
+			}
+			
+			$message = $stmt->fetchAll(PDO::FETCH_ASSOC);
+			return $message[0];
+		}
+
+		/* /////////////////////// ADD MESSAGE /////////////////////////////// */
+
+		/* ---
+		
+			Entrée : id de l'utilsateur qui post / timestamp du qwitt / contenu du qwitt
+			Sortie : rien ou un message d'erreur en cas de malfonction
+			Action : On insére le qwitt dans la bdd !
+
+			/!\ Même fonctionnement pour addMessage / addFavoris / addReqwitt /!\
+
+		--- */
+
+		public function addMessage($idUser,$date,$message){
+			$stmt = $this->pdo->prepare("INSERT INTO qwitt (idUser,date,message) VALUES (:idUser,:date,:message)");
+			$stmt->bindParam(':idUser',$idUser);
+			$stmt->bindParam(':date',$date);
+			$stmt->bindParam(':message',$message);
+			try {
+				$stmt->execute();
+			} catch (Exception $e) {
+				return ("Error line ".$e->getLine()." : ".$e->getMessage());
+			}
+		}
+
 		public function addFavoris($idUser,$idMsg,$date){
 			$stmt = $this->pdo->prepare("INSERT INTO favoris (idUser,idMessage,date) VALUES(:idUser,:idMessage,:date)");
 			$stmt->bindParam(':idUser',$idUser);
@@ -252,6 +399,19 @@
 			}
 		}
 
+		/* /////////////////////// CHANGE USER /////////////////////////////// */
+
+		/* ---
+		
+			Entrée : mail / clef de vérification
+			Sortie : tableau de résultat (success : TRUE | FALSE / error)
+			Action : On va récupérer l'utilisateur à l'aide de son adresse mail
+			On compare la clef de l'utilisateur à celle envoyé par la fonction, 
+			si ce sont les mêmes on met met l'utilisateur en tant que vérifié dans la base
+			Sinon on renvoie un message d'erreur
+
+		--- */
+
 		public function verifyUser($mail,$key){
 			$idUser = $this->getIdFromMail($mail);
 			$user = $this->getCurrentUser($idUser);
@@ -268,8 +428,19 @@
 			} else {
 				return array("success" => false,"error" => "Clef non valide, contactez l'administrateur du site");
 			}
-
 		}
+
+		/* ---
+		
+			Entrée : new profil est un tableau avec les informations rentrées dans les
+			paramètres par l'utilisateur, et l'id de l'utilisateur
+			Sortie : un message d'erreur !
+			Action : On va checker chaque entrée du tableau avec l'entrée dans la bdd, et 
+			si elles sont différentes ont update le profil de l'utilisateur dans la bdd 
+			Pour le mot de passe il faut regarder s'il est bien source du mot de passe crypté 
+			dans la bdd.
+
+		--- */
 
 		public function changeProfil($new_profil,$idUser){
 			$actual_profile = $this->getCurrentUser($idUser);
@@ -308,6 +479,16 @@
 			return $error;
 		}
 
+		/* /////////////////////// RELATION  /////////////////////////////// */
+
+		/* ---
+		
+			Entrée : id de l'user connecté / id de l'user que l'on regarde
+			Sortie : VRAI / FAUX
+			Action : On regarde dans la bdd si User connecté suit l'user que l'on regarde
+
+		--- */
+
 		public function isAboTo($idUser,$idProfil){
 			$stmt = $this->pdo->prepare("SELECT * FROM follow WHERE idUser = :idUser and idAbo = :idProfil");
 			$stmt->bindParam(":idUser",$idUser);
@@ -324,6 +505,15 @@
 			}
 		}
 
+		/* ---
+		
+			Entrée : id de l'user connecté / id de l'user à suivre
+			Sortie : message d'erreur s'il faut
+			Action : On ajoute à la bdd un lien de suivi entre l'user connecté et l'user à suivre
+			On renvoie un message d'erreur si ça plante
+
+		--- */
+
 		public function addFollow($idUser,$idAbo){
 			$stmt = $this->pdo->prepare("INSERT INTO follow(idUser,idAbo) VALUES(:idUser,:idAbo)");
 			$stmt->bindParam(':idUser',$idUser);
@@ -334,6 +524,15 @@
 				return ("Error line ".$e->getLine()." : ".$e->getMessage());
 			}
 		}
+
+		/* ---
+		
+			Entrée : id de l'user connecté / id de l'user à ne plus suivre
+			Sortie : message d'erreur s'il faut
+			Action : On retire à la bdd le lien de suivi entre l'user connecté et l'user suivi
+			On renvoie un message d'erreur si ça plante
+
+		--- */
 
 		public function removeFollow($idUser,$idAbo){
 			$stmt = $this->pdo->prepare("DELETE FROM follow WHERE idUser = :idUser and idAbo = :idAbo");
@@ -347,18 +546,36 @@
 		}
 	}
 
+	/*
+
+		L'objet qwitt est en extends database, ce qui veut dire qu'il a accès aux méthodes
+		de l'objet database. 
+
+		Cet objet peut contenir au choix un qwitt | reqwitt | favoris
+
+	*/
+
 	class qwitt extends database{
 		//On ne peut pas modifier ces valeurs après le __construct, on peut seulement les récupérer (READ ONLY)
-		private $idMsg;
-		private $idUser;
-		private $date;
-		private $message;
-		private $nbReQwitt;
-		private $nbFav;
-		private $user;
-		protected $pdo;
-		private $type;
-		private $reqwitt_message;
+		private $idMsg; //id du qwitt
+		private $idUser; //id de l'utilisateur qui a qwitté
+		private $date; //timestamp du qwitt
+		private $message; //message en cas d'un qwitt | qwitt reqwitté ou favoris 
+		private $nbReQwitt; //Nombre de reqwitt sur le message
+		private $nbFav; //Nombre de fav sur le message
+		private $user; //tableau d'information sur l'utilisateur
+		protected $pdo; //Objet pdo que l'on récupère à la création 
+		private $type; //Type de qwitt : normal | reqwitt | favoris
+		private $reqwitt_message; //Message dans le reqwitt 
+
+		/* ---
+		
+			Entrée : tableau de l'objet, objet pdo, type du qwitt
+			Sortie : #
+			Action : En fonction du type de l'objet on récupère les infos nécessaires à 
+			la création de l'objet qwitt
+
+		--- */
 
 		public function __construct($qwitt,$pdo,$type='normal'){
 			$this->idMsg = $qwitt["id"];
@@ -395,6 +612,15 @@
 		public function getUser(){return $this->user;}
 		public function getReqwittMessage(){return $this->reqwitt_message;}
 
+		/* ---
+		
+			Entrée : id du message / ce que l'on recherche
+			Sortie : Le nombre de reqwitt | favoris
+			Action : On va chercher dans la bdd le nombre de reqwitt ou de favoris 
+			qui ont été fait avec le message donné (enfin l'id) en entrée
+
+		--- */
+
 		private function getCaracOfMessage($idMsg,$type){
 			if($type == "reqwitt" || $type == "favoris"){
 				//Recuperer le nombre de reqwitt et de favoris
@@ -414,6 +640,7 @@
 		return $age;
 	}
 
+	//convertit un timestamp en une date affichable
 	function timestampToDate($timestamp){
 		$date = "le ".date("d/m/y \à H\hi", $timestamp);
 		return $date;
@@ -433,6 +660,7 @@
 		}
 	}
 
+	//Envoie d'un mail avec la clef et le mail en get dans l'url pour vérifier un utilisateur
 	function sendConfirmMail($mail,$key){
 		$to      = $mail;
 		$subject = 'Validez votre inscription sur Qwitter !';

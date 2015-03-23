@@ -1,6 +1,6 @@
 <?php
 	session_start();
-	require('library/lib.php');
+	require('library/database.php');
 
 	$key = $_GET['key'];
 	$mail = $_GET['mail'];

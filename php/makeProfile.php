@@ -1,7 +1,7 @@
 <?php
 	//On commence avec une page où les informations ne sont pas présentes 
 	//Ce script récupère les informations
-	require('library/lib.php');
+	require('library/database.php');
 
 	$db = new database();
 

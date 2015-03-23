@@ -1,7 +1,7 @@
 <?php
 
 	session_start();
-	require('library/lib.php');
+	require('library/database.php');
 
 	$db = new database();
 
