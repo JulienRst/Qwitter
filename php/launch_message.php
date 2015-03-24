@@ -1,5 +1,5 @@
 <?php
-	require("library/lib.php");
+	require("library/database.php");
 	$db = new database();
 	session_start();
 	$idUser = $_SESSION['idUserConnected'];

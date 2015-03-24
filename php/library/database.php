@@ -165,6 +165,8 @@
 				$stmt = $this->pdo->prepare("SELECT id FROM user WHERE mail = :mail");
 				$stmt->bindParam(':mail',$mail);
 				$stmt->execute();
+				$line = $stmt->fetch();
+				return $line[0];
 			} else {
 				return "Adresse introuvable";
 			}
@@ -415,7 +417,6 @@
 		public function verifyUser($mail,$key){
 			$idUser = $this->getIdFromMail($mail);
 			$user = $this->getCurrentUser($idUser);
-
 			if($user['verifKey'] == $key){
 				$stmt = $this->pdo->prepare("UPDATE user SET verified = 1 WHERE id = :idUser");
 				$stmt->bindParam(':idUser',$idUser);

@@ -5,9 +5,11 @@
 	session_start();
 	$idUser = $_SESSION["idUserConnected"];
 
+	print_r($_FILES);
+
 	if(isset($_FILES['url_pic']) && $_FILES['url_pic']["error"] == 0){ 
 	    $dossier = '../datas/profil-pic/';
-	    $fichier = basename($idUser.$_FILES['url_pic']['name']);
+	    $fichier = basename($_FILES['url_pic']['name']);
 		$fichier = strtr($fichier,'ÀÁÂÃÄÅÇÈÉÊËÌÍÎÏÒÓÔÕÖÙÚÛÜÝàáâãäåçèéêëìíîïðòóôõöùúûüýÿ','AAAAAACEEEEIIIIOOOOOUUUUYaaaaaaceeeeiiiioooooouuuuyy'); 
 		$fichier = preg_replace('/([^.a-z0-9]+)/i', '-', $fichier);
 		$extensions = array('.png', '.gif', '.jpg', '.jpeg');
@@ -15,6 +17,7 @@
 		if(!in_array($extension, $extensions)){
 			exit();
 		} else {
+			$fichier = uniqid().'.'.$extension;
 			if(move_uploaded_file($_FILES['url_pic']['tmp_name'], $dossier.$fichier)){
 				echo 'Upload effectué avec succès !';
 			} else {
