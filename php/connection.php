@@ -1,5 +1,5 @@
 <?php
-	include("library/lib.php");
+	require('library/database.php');
 
 	$db = new database;
 
